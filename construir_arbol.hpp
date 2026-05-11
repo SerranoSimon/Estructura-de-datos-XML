@@ -1,3 +1,3 @@
-#include "clases.hpp"
+#include "Tree.hpp"
 
-Arbol construir_arbol(const std::string& ruta);
+Tree* construir_arbol(const std::string& ruta);

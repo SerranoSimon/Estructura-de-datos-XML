@@ -41,7 +41,7 @@ class Tree{
         Node* parent;
         std::vector<Node*> children;
         Node(std::string t, std::string txt, Node* p = nullptr);
-         };
+        };
         Node* rootNode;
         int treeSize;
         int cant_libros;
@@ -52,9 +52,11 @@ class Tree{
     int getCantLibros();
     Node* root();
     void imprimir(Node* nodo, int nivel = 0);
+    void listar(Node* nodo);
 
 
     Node* insert(Node* padre, std::string t, std::string txt); //retorna el nodo insertado
+    
 
     
 };

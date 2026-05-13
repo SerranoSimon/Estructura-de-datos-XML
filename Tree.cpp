@@ -63,6 +63,21 @@ void Tree::imprimir(Node* nodo, int nivel) {
     }
 }
 
+void Tree::listar(Node* nodo) {
+    // Caso base: si el nodo es nulo no se hace nada
+    if (!nodo) return;
+
+    // Si el nodo actual es un book_id, se imprime
+    if (nodo->tag == "book_id"){
+        std::cout << nodo->text << "\n";
+    }
+
+    // Llamada recursiva para todos los hijos del nodo actual para mantener el recorrido PreOrder
+    for (Node* hijo : nodo->children) {
+        listar(hijo);
+    }
+}
+
 
 
 

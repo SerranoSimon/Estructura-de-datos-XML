@@ -6,7 +6,7 @@
 
 
 // Tags para filtrar los datos que nos interesan.
-std::string tags_hojas[] = { "title", "isbn", "publication_year", "description", "num_pages", "avarege_rating", "lenguage_code"};
+std::string tags_hojas[] = { "title", "isbn", "publication_year", "description", "num_pages", "average_rating", "lenguage_code"};
 std::string tags_similar_book[] = { "title", "isbn", "publication_year"};
 
 /// @brief Funcion que añade libros al arbol. 
@@ -17,7 +17,7 @@ void añadirLibro(Tree* arbol, pugi::xml_node nodoLibro){
     std::string bookId = nodoLibro.child_value("id");
     Tree::Node* Libro= arbol->insert(arbol->root(),"book_id",bookId);
     // Insertamos hijos (hojas) a libro, usando los tags de interes.
-     for(const std::string& tag : tags_hojas){
+    for(const std::string& tag : tags_hojas){
         arbol->insert(Libro,tag, nodoLibro.child_value(tag.c_str()) );
     }
     // añadimos el nodo similar_books
@@ -55,12 +55,10 @@ Tree* construir_arbol(const std::string& ruta) {
     int i=0;
     //Vamos añadiendo los libros revisando entre las etiquetas <GoodreadsResponse><book> ... <book><GoodreadsResponse>
     for (pugi::xml_node GRResponse : root.children("GoodreadsResponse")) {
-        if(i==2) break;
+        //if(i==2) break;
         pugi::xml_node bookNodo= GRResponse.child("book");
         añadirLibro(tree,bookNodo);
         i++;
-
-
     }
     return tree;
 }

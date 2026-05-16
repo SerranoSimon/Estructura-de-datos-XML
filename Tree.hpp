@@ -53,6 +53,8 @@ class Tree{
     Node* root();
     void imprimir(Node* nodo, int nivel = 0);
     void listar(Node* nodo);
+    void liberarNodo(Node* nodo);
+    void borrar_ratings(float r);
 
 
     Node* insert(Node* padre, std::string t, std::string txt); //retorna el nodo insertado

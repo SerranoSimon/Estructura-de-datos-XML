@@ -10,7 +10,8 @@ int main(){
     std::cout << "cant libros: " << arbol->root()<< "\n";
     //arbol->imprimir(arbol->root(),0);
     //arbol->listar(arbol->root());
-    arbol->borrar_ratings(4);
-    arbol->listar(arbol->root());
+    // arbol->borrar_ratings(4);
+    // arbol->listar(arbol->root());
+    arbol->precursores();
     return 0;
 }

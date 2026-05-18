@@ -1,6 +1,8 @@
 #include "Tree.hpp"
 #include <algorithm>
 #include <functional>
+#include <string>
+#include <iostream>
 
 // Node
 Tree::Node::Node(std::string t,std::string txt, Node* p) {
@@ -78,7 +80,12 @@ void Tree::listar(Node* nodo) {
     }
 }  
 
-// Funcion que libera recursivamente la memoria de un nodo y sus hijos
+// Funcion que lista los id de cada libro (sin parametro)
+void Tree::listar(){
+    listar(rootNode);
+}
+
+// Funcion auxiliar que libera recursivamente la memoria de un nodo y sus hijos
 void Tree::liberarNodo(Node* nodo){
     if(!nodo) return;
     for(Tree::Node* hijoNodo : nodo->children){
@@ -110,7 +117,7 @@ void Tree::borrar_ratings(float r){
                     tieneRating = true;
                 }
                 catch(...){
-                    tieneRating = false; // si el libroHijo no tiene un tag "average_rating" se ignora
+                    tieneRating = false; // si el libro no tiene un tag "average_rating" se ignora
                 }
                 break;
             }
@@ -129,7 +136,69 @@ void Tree::borrar_ratings(float r){
     }
 }
 
+// Funcion auxiliar que retorna el año de publicacion de cualquier nodo de tipo libro
+int Tree::obtenerAnioPublicacion(Node* nodoLibro) {
+    for (Node* hijo : nodoLibro->children) {
+        if (hijo->tag == "publication_year") {
+            try {
+                return std::stoi(hijo->text);
+            } catch (...) {
+                return -1; // Retorna -1 si el año es invalido o no esta
+            }
+        }
+    }
+    return -1; // Retorna -1 por defecto en caso de no encontrar el tago "publication_year"
+}
 
+// Funcion que lista los id de todos los libros que se publicaron antes que sus libros similares
+void Tree::precursores() {
+     // Si rootNode es nulo o no tiene hijos no se hace nada
+    if (!rootNode || rootNode->children.empty()) {
+        return;
+    }
 
+    // 
+    for (Node* libroNodo : rootNode->children) {
+        if (libroNodo->tag != "book_id") continue; // En caso de que un libro no tenga id pasa al siguiente libro
+
+        int anioBase = obtenerAnioPublicacion(libroNodo);
+        if (anioBase == -1) continue; // EN caso de que un libro no tenga año valido se pasa al siguiente libro
+
+        Node* similarBooksNode = nullptr;
+        
+        // Se obtiene el nodo que contiene los libros similares
+        for (Node* hijo : libroNodo->children) {
+            if (hijo->tag == "similar_books") {
+                similarBooksNode = hijo;
+                break;
+            }
+        }
+
+        // Si el nodo del libro no tiene el nodo de libros similares o si no no hay libros similares, se pasa al siguiente libro
+        if (!similarBooksNode || similarBooksNode->children.empty()) {
+            continue; 
+        }
+
+        bool todosPosteriores = true;
+
+        // Se evalua cada libro similar hijo del nodo de libros similares
+        for (Node* simBook : similarBooksNode->children) {
+            if (simBook->tag == "similar_book") {
+                int anioSimilar = obtenerAnioPublicacion(simBook);
+                
+                // Si un libro similar tiene año de publicacion menor o igual al del libro, este ya no es precursor
+                if (anioSimilar <= anioBase) {
+                    todosPosteriores = false;
+                    break; 
+                }
+            }
+        }
+
+        // Si todos los libros similares son posteriores entonses se imprime la id del libro precursor
+        if (todosPosteriores) {
+            std::cout << libroNodo->text << "\n";
+        }
+    }
+}
 
 
